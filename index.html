@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>立配单改时间段 - 交互原型与PRD | 澳觅APP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body{font-family:"Inter",-apple-system,sans-serif;background:#f0f2f5;color:#1a1a2e;margin:0;}
+.tab-btn{padding:7px 15px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #e0e0e0;background:white;color:#555;transition:all .2s;white-space:nowrap;}
+.tab-btn.active{background:#FF4B5C;color:white;border-color:#FF4B5C;box-shadow:0 4px 12px rgba(255,75,92,.3);}
+.tab-panel{display:none;}
+.tab-panel.active{display:flex;gap:28px;align-items:flex-start;}
+.iphone-shell{width:305px;flex-shrink:0;background:#111;border-radius:50px;padding:12px;box-shadow:0 30px 60px rgba(0,0,0,.4),inset 0 0 0 1px #444;position:sticky;top:24px;}
+.iphone-inner{background:white;border-radius:40px;overflow:hidden;position:relative;height:630px;}
+.dynamic-island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:18px;z-index:100;}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:50px 22px 6px;font-size:11px;font-weight:700;color:#000;}
+.screen-content{height:calc(100% - 74px);overflow-y:auto;}
+.screen-content::-webkit-scrollbar{display:none;}
+.ann{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#FF4B5C;color:white;border-radius:50%;font-size:10px;font-weight:800;position:absolute;z-index:50;box-shadow:0 2px 8px rgba(255,75,92,.5);}
+.specs-panel{flex:1;min-width:0;}
+.spec-section{background:white;border-radius:14px;padding:18px;margin-bottom:14px;border-left:4px solid #ccc;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.spec-ui{border-left-color:#FF4B5C;}
+.spec-data{border-left-color:#3b82f6;}
+.spec-tech{border-left-color:#8b5cf6;}
+.spec-h2{font-size:14px;font-weight:700;margin:0 0 12px;display:flex;align-items:center;gap:6px;}
+.ann-ref{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;background:#FF4B5C;color:white;border-radius:50%;font-size:10px;font-weight:800;margin-right:5px;flex-shrink:0;}
+.tag{display:inline-block;padding:2px 7px;border-radius:8px;font-size:11px;font-weight:600;margin:2px;}
+.tag-new{background:#dcfce7;color:#15803d;}
+.tag-del{background:#fee2e2;color:#b91c1c;}
+.tag-mod{background:#dbeafe;color:#1d4ed8;}
+.alert-box{background:#fff8f0;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-size:12px;color:#9a3412;margin:8px 0;line-height:1.5;}
+.info-box{background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:12px;color:#1e40af;margin:8px 0;line-height:1.5;}
+.aomi-red{color:#FF4B5C;}
+.spec-val{font-size:12.5px;color:#333;line-height:1.7;}
+.spec-label{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+hr.s{border:none;border-top:1px solid #f0f0f0;margin:12px 0;}
+code{background:#f4f4f4;padding:1px 5px;border-radius:4px;font-size:11px;font-family:monospace;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:#f8f9fa;padding:7px 8px;text-align:left;font-weight:600;border-bottom:2px solid #e9ecef;}
+td{padding:7px 8px;border-bottom:1px solid #f0f0f0;vertical-align:top;}
+/* App UI */
+.app-bar{background:white;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #f0f0f0;}
+.btn-primary{background:#FF4B5C;color:white;border-radius:24px;padding:13px;text-align:center;font-size:15px;font-weight:700;}
+.time-range{color:#FF4B5C;font-size:14px;font-weight:700;}
+.youxiang-box{background:#fffbeb;border-top:1px solid #fde68a;padding:10px 14px;font-size:11px;}
+</style>
+</head>
+<body>
+<div style="max-width:1380px;margin:0 auto;padding:20px;">
+
+<!-- Header -->
+<div style="background:linear-gradient(135deg,#FF4B5C 0%,#ff8a65 100%);border-radius:20px;padding:24px 28px;color:white;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+  <div>
+    <div style="font-size:10px;font-weight:700;opacity:.75;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;">澳觅APP · 外卖业务线 PRD</div>
+    <h1 style="font-size:24px;font-weight:800;margin:0 0 5px;">立配单改时间段</h1>
+    <p style="margin:0;opacity:.85;font-size:13px;">将立配单预计送达时间由精确时间点改为时间段，降低用户投诉率</p>
+  </div>
+  <div style="text-align:right;font-size:12px;opacity:.8;">
+    <div>版本 v1.0</div>
+    <div>2026-03-24</div>
+    <div style="margin-top:6px;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:12px;">设计阶段</div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;background:white;padding:10px 14px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);">
+  <button class="tab-btn active" onclick="switchTab(0)">① 竞品分析</button>
+  <button class="tab-btn" onclick="switchTab(1)">② 提交订单页</button>
+  <button class="tab-btn" onclick="switchTab(2)">③ 订单详情页</button>
+  <button class="tab-btn" onclick="switchTab(3)">④ 我的订单列表</button>
+  <button class="tab-btn" onclick="switchTab(4)">⑤ 气泡及实时活动</button>
+  <button class="tab-btn" onclick="switchTab(5)">⑥ 优享送处理</button>
+  <button class="tab-btn" onclick="switchTab(6)">⑦ 管理后台</button>
+  <button class="tab-btn" onclick="switchTab(7)">⑧ 通用配置后台</button>
+</div>
+
+<!-- ===== TAB 0: 竞品分析 ===== -->
+<div class="tab-panel active" id="tab-0">
+  <div class="specs-panel" style="max-width:100%;">
+    <!-- 美团竞品数据 -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:15px;font-weight:800;color:#1a1a2e;margin-bottom:14px;">🔬 美团竞品数据分析</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px;">
+        <!-- 截图1 -->
+        <div style="border:1px solid #e9ecef;border-radius:12px;overflow:hidden;font-size:11px;">
+          <div style="background:#f8f9fa;padding:7px 12px;font-weight:700;font-size:11px;color:#555;border-bottom:1px solid #e9ecef;">截图① (当前时间≈11:11)</div>
+          <div style="padding:12px;">
+            <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:8px 10px;margin-bottom:6px;">
+              <span style="color:#f59e0b;font-weight:700;">立即配送</span>
+              <span style="color:#f59e0b;margin-left:8px;">预计 <strong>11:30–11:45</strong> 送达</span>
+            </div>
+            <div style="background:#f8f9fa;border-radius:8px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;">
+              <span><strong>1对1急送</strong> ⓘ 预计 <strong>11:15–11:30</strong> 送达</span>
+              <span style="color:#888;">¥3.5</span>
+            </div>
+            <div style="font-size:10px;color:#888;margin-top:6px;">准时宝 超过 <strong>12:00</strong> 起赔，最高赔6元</div>
+          </div>
+          <div style="background:#f0f7ff;padding:6px 12px;font-size:10px;color:#1e40af;">
+            T立即=11:40 / 1对1区间宽15min / 准时宝起赔=11:45+15=12:00
+          </div>
+        </div>
+
+        <!-- 截图2 -->
+        <div style="border:1px solid #e9ecef;border-radius:12px;overflow:hidden;font-size:11px;">
+          <div style="background:#f8f9fa;padding:7px 12px;font-weight:700;font-size:11px;color:#555;border-bottom:1px solid #e9ecef;">截图② (当前时间≈14:4x)</div>
+          <div style="padding:12px;">
+            <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:8px 10px;margin-bottom:6px;">
+              <span style="color:#f59e0b;font-weight:700;">立即配送</span>
+              <span style="color:#f59e0b;margin-left:8px;">预计 <strong>14:48–15:03</strong> 送达</span>
+            </div>
+            <div style="background:#f8f9fa;border-radius:8px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;">
+              <span><strong>1对1急送</strong> ⓘ 预计 <strong>14:44–14:54</strong> 送达</span>
+              <span style="color:#888;">¥3</span>
+            </div>
+            <div style="font-size:10px;color:#888;margin-top:6px;">准时宝 超过 <strong>15:18</strong> 起赔，最高赔6元</div>
+          </div>
+          <div style="background:#f0f7ff;padding:6px 12px;font-size:10px;color:#1e40af;">
+            T立即=14:58 / 1对1区间宽<span style="color:#dc2626;font-weight:700;">10min</span> / 准时宝起赔=15:03+15=15:18
+          </div>
+        </div>
+
+        <!-- 截图3 -->
+        <div style="border:1px solid #e9ecef;border-radius:12px;overflow:hidden;font-size:11px;">
+          <div style="background:#f8f9fa;padding:7px 12px;font-weight:700;font-size:11px;color:#555;border-bottom:1px solid #e9ecef;">截图③ (时间段降级场景)</div>
+          <div style="padding:12px;">
+            <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:8px;padding:8px 10px;margin-bottom:6px;">
+              <span style="color:#f59e0b;font-weight:700;">立即配送</span>
+              <span style="color:#f59e0b;margin-left:8px;">预计 <strong>14:54</strong> 送达</span>
+              <span style="color:#dc2626;margin-left:6px;font-size:10px;">（点位模式）</span>
+            </div>
+            <div style="background:#f8f9fa;border-radius:8px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;">
+              <span><strong>1对1急送</strong> ⓘ 预计 14:53 送达 <em style="color:#888;">(提前1分钟)</em></span>
+              <span style="color:#888;">¥3</span>
+            </div>
+            <div style="font-size:10px;color:#888;margin-top:6px;">准时宝 超过 <strong>15:09</strong> 起赔，最高赔6元</div>
+          </div>
+          <div style="background:#fff8f0;padding:6px 12px;font-size:10px;color:#92400e;">
+            ⚠️ 时间段降级：优势只有1分钟时，1对1不展示时间段
+          </div>
+        </div>
+      </div>
+
+      <!-- 分析结论表格 -->
+      <div style="background:white;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;">📌 关键规律总结</div>
+        <table>
+          <tr><th style="width:25%;">规律项</th><th style="width:35%;">美团实测数据</th><th style="width:40%;">对我方规则定义的价值印证</th></tr>
+          <tr>
+            <td><strong>立配单基础偏移量</strong></td>
+            <td>图①(T=11:40, 区间11:30-11:45) 及 图②(T=14:58, 区间14:48-15:03)<br>完美切中「10分钟前～5分钟后」。</td>
+            <td><strong style="color:#15803d;">重要印证：这强有力地验证了我们本次为“立配单改时间段”所配置的核心基准公式「前10后5」是业内准确可靠的最佳实践。</strong></td>
+          </tr>
+          <tr>
+            <td><strong>准时宝等截止判定</strong></td>
+            <td><code>截止 = 立即配送 end_time + 15min</code><br>图①12:00=11:45+15 ✓<br>图②15:18=15:03+15 ✓</td>
+            <td>我们采用 <code>deadline=T+after_min</code>（无额外缓冲），比美团更严格。若客诉率高可参考美团加N分钟容忍宽限，但当前方案逻辑更清晰。</td>
+          </tr>
+          <tr>
+            <td><strong>1对1急送区间宽度</strong></td>
+            <td>图①宽15min；图②宽<strong>10min</strong>（比立配窄）。</td>
+            <td><strong>验证了优享送必须脱离立配单，使用独立的 "ysx_before / ysx_after 偏移量" 做窄区间的必要性。</strong></td>
+          </tr>
+          <tr style="background:#fffbeb;">
+            <td><strong>⭐ 降级规则（最关键）</strong></td>
+            <td>图③：优势极小时，不再展示时间段，降级为"预计XX:XX送达（提前N分钟）"</td>
+            <td>支持了我们优享送的降级优化：当 `提前量 ≤ ysx_after` 时，降级展示为“提前约Y分钟”，避免降级体验差。</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB 1: 提交订单页 ===== -->
+<div class="tab-panel" id="tab-1">
+  <div class="iphone-shell">
+    <div class="iphone-inner">
+      <div class="dynamic-island"></div>
+      <div class="status-bar"><span>16:30</span><span style="font-size:10px;">●●  ▲ 🔋85</span></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span style="font-size:16px;color:#FF4B5C;">←</span>
+          <span style="font-size:15px;font-weight:700;">提交訂單</span>
+        </div>
+        <!-- Address -->
+        <div style="padding:12px 14px;border-bottom:6px solid #f5f5f5;background:white;">
+          <div style="font-size:14px;font-weight:700;">金嘉_SXF（香洲區）我</div>
+          <div style="font-size:11px;color:#888;margin-top:2px;">我 先生　15037167069 ›</div>
+          <div style="background:#fff3f3;border-radius:6px;padding:5px 9px;font-size:10px;color:#FF4B5C;margin-top:7px;">🔔 酒店、娛樂場所的訂單無法送上樓　共2條 遊客提醒</div>
+        </div>
+        <!-- Delivery time - KEY CHANGE -->
+        <div style="position:relative;">
+          <span class="ann" style="top:10px;right:10px;">1</span>
+          <div style="padding:12px 14px;border-bottom:6px solid #f5f5f5;background:white;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;font-weight:600;">立即配送</span>
+              <span class="time-range">約 16:55 – 17:10 ›</span>
+            </div>
+            <div style="font-size:10px;color:#888;margin-top:3px;">商家出餐約6分鐘，騎手配送約55分鐘</div>
+          </div>
+        </div>
+        <!-- 优享送 -->
+        <div style="position:relative;">
+          <span class="ann" style="top:8px;right:10px;">2</span>
+          <div class="youxiang-box">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:#f59e0b;font-weight:700;font-size:11px;">⚡ 優享送</span>
+              <span style="font-size:11px;">提前 <strong class="aomi-red">5</strong> 分鐘送達，超時退費</span>
+              <span style="margin-left:auto;font-weight:700;font-size:12px;">$3</span>
+              <span style="width:18px;height:18px;border:1.5px solid #ccc;border-radius:50%;flex-shrink:0;display:inline-block;"></span>
+            </div>
+            <div style="font-size:10px;color:#888;margin-top:4px;">預計 17:05 送達，最終以付款後預計送達時間為準</div>
+          </div>
+        </div>
+        <!-- Items sample -->
+        <div style="padding:10px 14px;border-bottom:6px solid #f5f5f5;background:white;">
+          <div style="font-size:10px;color:#888;margin-bottom:6px;">KIKO门店2【商超】　澳覓專送</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:40px;height:40px;border-radius:8px;background:#f0f0f0;flex-shrink:0;"></div>
+            <div style="flex:1;font-size:12px;font-weight:500;">必選商品（必須和不可單獨售賣商品下單）</div>
+            <div style="font-size:12px;">$0.1</div>
+          </div>
+        </div>
+        <!-- Fee summary -->
+        <div style="padding:10px 14px;border-bottom:6px solid #f5f5f5;background:white;">
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#888;"><span>包裝費</span><span>$0.1</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#888;"><span>膠袋費</span><span>$1</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#888;"><span>配送費</span><span>$7.5</span></div>
+        </div>
+        <div style="padding:12px 14px;background:white;">
+          <div class="btn-primary">合計 $44.06　立即支付</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specs -->
+  <div class="specs-panel">
+    <div class="spec-section spec-ui">
+      <div class="spec-h2">🔴 交互与UI规范</div>
+      <div style="margin-bottom:14px;">
+        <div class="spec-label"><span class="ann-ref">1</span> 立即配送时间显示变更</div>
+        <div class="spec-val">
+          <span class="tag tag-del">原：大約 17:01 ›</span> → <span class="tag tag-new">改：約 16:55 – 17:10 ›</span><br><br>
+          <strong>展示格式：</strong><code>約 {HH:mm} – {HH:mm}</code>，「約」字保留传达预估感<br>
+          <strong>跨日处理：</strong>若时间横跨凌晨0点（即结束时间 < 开始时间），不再隐藏时间段，<strong>时间展示样式需与【预约单】现有的跨日时间段展示格式完全对齐</strong>（例如保持为预估 `HH:mm - HH:mm` 送达，或增加『次日』前缀等，与预约单跨日表现完全一致）。<br>
+          <strong>降级退化（展示精确时间点）条件：</strong><br>
+          &nbsp;&nbsp;1. 门店命中通用配置的 <code>exclude_shop_ids</code> 排除名单<br>
+          &nbsp;&nbsp;2. 当前时间（查询或下单请求时）不在通用配置的 <code>active_time_periods</code> 生效时段内
+        </div>
+      </div>
+      <hr class="s">
+      <div>
+        <div class="spec-label"><span class="ann-ref">2</span> 优享送时间配置逻辑（回归精确时间点）</div>
+        <div class="spec-val">
+          <strong>业务决策：</strong>优享送在用户侧保持以【精确时间点】展示，不再改为时间段。但是其时间点的计算基准发生了变化。<br><br>
+          <strong>计算公式：</strong><br>
+          <code>计算基准时间 = 立配单区间终点（即 T + after_minutes）</code><br>
+          <code>优享送最终送达时间 = 计算基准时间 - 优享送提前分钟数</code><br><br>
+          <strong>案例推演：</strong><br>
+          立配单预计 16:55–17:10 送达，优享送选择为提前 5 分钟。<br>
+          则优享送预计送达时间点为：<code>17:10 - 5 = 17:05</code>。<br><br>
+          <div class="info-box">💡 发单与展示时，系统根据此规则算出一个绝对的【单一精确时间点】传递给配送。所有用户侧、骑手侧以及短信通知的展示均完全按照此点位执行（如展示“预计17:05送达”）。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section spec-data">
+      <div class="spec-h2">🔵 数据与算法逻辑</div>
+      <div style="margin-bottom:14px;">
+        <div class="spec-label">时间段计算公式</div>
+        <div class="spec-val">
+          <code>开始时间 = T_原始预计送达 - before_minutes</code><br>
+          <code>结束时间 = T_原始预计送达 + after_minutes</code><br><br>
+          参数来源：通用配置接口返回字段 <code>time_range_config</code><br>
+          &nbsp;&nbsp;<code>before_minutes</code>：默认 <strong>10</strong>（参考预约单前10后5，立配单可独立配置）<br>
+          &nbsp;&nbsp;<code>after_minutes</code>：默认 <strong>5</strong><br><br>
+          <div class="info-box">ℹ️ 原时间点 T 继续用于所有内部业务逻辑（商户出餐倒计时、骑手分配、小票打印、超时判定），仅用户端展示层改为时间段</div>
+        </div>
+      </div>
+      <hr class="s">
+      <div>
+        <div class="spec-label">功能开关（通用配置新增）</div>
+        <div class="spec-val">
+          新增配置项 <code>instant_order_time_range</code>：<br>
+          <table style="margin-top:8px;">
+            <tr><th>字段</th><th>类型</th><th>说明</th></tr>
+            <tr><td><code>enabled</code></td><td>bool</td><td>总开关</td></tr>
+            <tr><td><code>business_types</code></td><td>array</td><td>["restaurant","non_restaurant"]，按业务线控制</td></tr>
+            <tr><td><code>active_time_periods</code></td><td>array</td><td>生效时段，如<code>[{"start":"11:00","end":"14:00"}]</code>。为空数组则全时段生效</td></tr>
+            <tr><td><code>exclude_shop_ids</code></td><td>array</td><td>排除门店ID列表（麦当劳等保持时间点）</td></tr>
+            <tr><td><code>before_minutes</code></td><td>int</td><td>前偏移分钟数，默认10</td></tr>
+            <tr><td><code>after_minutes</code></td><td>int</td><td>后偏移分钟数，默认5</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section spec-tech">
+      <div class="spec-h2">🟣 技术与边界说明</div>
+      <div class="spec-val">
+        <strong>端侧影响范围明确：</strong><br>
+        <table style="margin-top:8px;">
+          <tr><th>端</th><th>是否展示时间段</th><th>备注</th></tr>
+          <tr><td>用户APP</td><td style="color:#15803d;font-weight:600;">✅ 是</td><td>本次改造核心</td></tr>
+          <tr><td>小程序</td><td style="color:#15803d;font-weight:600;">✅ 是</td><td>核心逻辑、展示均与 APP 保持严密一致（涵提交订单、订单详情等），同步改造。</td></tr>
+          <tr><td>商户APP/POS</td><td style="color:#b91c1c;font-weight:600;">❌ 否</td><td>保留精确时间点</td></tr>
+          <tr><td>骑手APP</td><td style="color:#b91c1c;font-weight:600;">❌ 否</td><td>保留精确时间点</td></tr>
+          <tr><td>管理后台</td><td style="color:#1d4ed8;font-weight:600;">➕ 附加</td><td>加括号显示原时间段，见Tab⑥</td></tr>
+          <tr><td>小票打印</td><td style="color:#b91c1c;font-weight:600;">❌ 否</td><td>保留精确时间点</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END TAB 0 -->
+
+<!-- ===== TAB 1: 订单详情页 ===== -->
+<div class="tab-panel" id="tab-1">
+  <div class="iphone-shell">
+    <div class="iphone-inner">
+      <div class="dynamic-island"></div>
+      <div class="status-bar"><span>16:35</span><span style="font-size:10px;">●●  ▲ ��85</span></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span style="font-size:16px;color:#FF4B5C;">←</span>
+          <span style="font-size:15px;font-weight:700;">訂單詳情</span>
+          <span style="margin-left:auto;font-size:13px;color:#888;">🎧</span>
+        </div>
+        <!-- Status banner -->
+        <div style="background:#f9f9f9;padding:12px 14px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:15px;font-weight:700;">等待支付，剩餘13:34 ›</span>
+          <span style="width:24px;height:24px;background:#dbeafe;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;">1</span>
+        </div>
+        <!-- Notice bar -->
+        <div style="padding:8px 14px;background:white;border-bottom:1px solid #f5f5f5;display:flex;align-items:center;gap:6px;position:relative;">
+          <span class="ann" style="top:8px;right:10px;">2</span>
+          <span style="font-size:10px;color:#888;">🔔</span>
+          <span style="font-size:11px;color:#555;">為什麼預計送達時間是區間，訂單會變慢嗎？</span>
+          <span style="font-size:12px;color:#ccc;margin-left:auto;">⋮</span>
+        </div>
+        <!-- Address notice -->
+        <div style="padding:10px 14px;background:white;border-bottom:1px solid #f5f5f5;">
+          <div style="font-size:10px;color:#888;">酒店、娛樂場所的訂單無法送上樓</div>
+        </div>
+        <!-- Time range - KEY -->
+        <div style="position:relative;padding:16px 14px;background:white;border-bottom:1px solid #f5f5f5;">
+          <span class="ann" style="top:12px;right:10px;">3</span>
+          <div style="font-size:13px;color:#555;margin-bottom:4px;">預計送達</div>
+          <div style="font-size:14px;font-weight:600;color:#FF4B5C;">16:55 – 17:10</div>
+          <div style="font-size:11px;color:#888;margin-top:3px;">由澳覓專送配送</div>
+        </div>
+        <!-- Action buttons -->
+        <div style="padding:14px;background:white;border-bottom:8px solid #f5f5f5;display:flex;justify-content:center;gap:40px;">
+          <div style="text-align:center;">
+            <div style="width:40px;height:40px;border:1px solid #ddd;border-radius:10px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:16px;">✕</div>
+            <div style="font-size:10px;color:#666;">取消訂單</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:40px;height:40px;border:1px solid #ddd;border-radius:10px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:16px;">📞</div>
+            <div style="font-size:10px;color:#666;">聯系商家</div>
+          </div>
+        </div>
+        <!-- Notification prompt -->
+        <div style="margin:8px 14px;background:#fff8f0;border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;flex:1;color:#555;">開啟系統通知，實時掌握訂單進度</span>
+          <span style="background:#FF4B5C;color:white;font-size:10px;padding:4px 8px;border-radius:10px;">去開啟</span>
+          <span style="font-size:12px;color:#ccc;">✕</span>
+        </div>
+        <!-- Expected arrival bottom -->
+        <div style="position:relative;padding:12px 14px;background:white;border-top:1px solid #f5f5f5;">
+          <span class="ann" style="top:10px;right:10px;">4</span>
+          <div style="font-size:11px;color:#888;margin-bottom:3px;">期望送達時間</div>
+          <div style="font-size:13px;font-weight:600;color:#FF4B5C;">16:55 – 17:10</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="specs-panel">
+    <div class="spec-section spec-ui">
+      <div class="spec-h2">🔴 交互与UI规范</div>
+      <div style="margin-bottom:12px;">
+        <div class="spec-label"><span class="ann-ref">1</span> 顶部状态栏</div>
+        <div class="spec-val">无变化，保持精确倒计时。</div>
+      </div>
+      <hr class="s">
+      <div style="margin-bottom:12px;">
+        <div class="spec-label"><span class="ann-ref">2</span> 新增公告通知栏（新增）</div>
+        <div class="spec-val">
+          <span class="tag tag-new">新增</span> 在所有状态的立配单订单详情中插入一条公告：<br>
+          文案：<em>「為什麼預計送達時間是區間，訂單會變慢嗎？」</em><br>
+          点击跳转到 H5 公告页（URL由运营后台配置）<br>
+          排列顺序：紧跟状态栏后，现有其他公告之前（或排列顺序无特别要求，随后方排列）<br>
+          <strong>仅在门店开启时间段模式时展示此公告</strong>，排除门店（时间点展示）不显示
+        </div>
+      </div>
+      <hr class="s">
+      <div style="margin-bottom:12px;">
+        <div class="spec-label"><span class="ann-ref">3</span> 预计送达时间段（核心变更）</div>
+        <div class="spec-val">
+          <span class="tag tag-mod">修改</span> 原：<code>預計 17:01 送達</code><br>
+          改为：<code>16:55 – 17:10</code>（<strong>保持原UI样式不变</strong>，字号、字重、颜色均与原时间点展示一致，仅替换文字内容为时间段）<br>
+          上方标签文案保持原「預計送達」样式不变<br>
+          <strong>所有订单状态均需调整：</strong>待支付、已接单、已出餐、待取餐、已送达、已取消均展示时间段
+        </div>
+      </div>
+      <hr class="s">
+      <div>
+        <div class="spec-label"><span class="ann-ref">4</span> 底部「期望送达时间」</div>
+        <div class="spec-val">
+          <span class="tag tag-mod">修改</span> 原：时间点 → 改为同步展示时间段 <code>16:55 – 17:10</code>
+        </div>
+      </div>
+      <hr class="s">
+      <!-- 插入分享订单说明 -->
+      <div style="margin-bottom:12px;">
+        <div class="spec-label">🔗 补充场景：分享订单页</div>
+        <div class="spec-val">
+          <span class="tag tag-new">同步覆盖</span> 当订单为时间段模式，分享出去的订单界面（如微信分享卡片后的页面）也应同步展示时间段，保持多端体验统一。<br>
+          <div style="width:280px;margin-top:8px;border:1px dashed #cbd5e1;border-radius:12px;padding:18px;background:#f8fafc;color:#64748b;font-size:12px;line-height:1.6;">分享订单页示意图资源未随原型文件一并提供，部署版本以文字说明替代。若你补充该图片，我可以再帮你更新发布页。</div>
+        </div>
+      </div>
+    </div>
+    <div class="spec-section spec-data">
+      <div class="spec-h2">🔵 数据与逻辑</div>
+      <div class="spec-val">
+        • 时间段由同一接口字段下发，与提交订单页计算逻辑一致<br>
+        • 已取消订单：展示下单时的时间段快照（保留历史值不重算）<br>
+        • 已送达订单：展示实际送达时间点（不改为时间段）
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END TAB 1 -->
+
+<!-- ===== TAB 2: 我的订单列表 ===== -->
+<div class="tab-panel" id="tab-2">
+  <div class="iphone-shell">
+    <div class="iphone-inner">
+      <div class="dynamic-island"></div>
+      <div class="status-bar"><span>15:28</span><span style="font-size:10px;">●●  ▲ 🔋</span></div>
+      <div class="screen-content">
+        <div class="app-bar">
+          <span style="font-size:16px;color:#FF4B5C;">←</span>
+          <div style="flex:1;background:#f5f5f5;border-radius:16px;padding:6px 12px;font-size:11px;color:#aaa;">�� 搜索我的訂單</div>
+          <span style="font-size:14px;color:#555;margin-left:8px;">⊞ ✉ ⋮</span>
+        </div>
+        <!-- Tab bar -->
+        <div style="display:flex;border-bottom:2px solid #f0f0f0;background:white;font-size:12px;">
+          <span style="padding:8px 12px;color:#FF4B5C;font-weight:700;border-bottom:2px solid #FF4B5C;">全部</span>
+          <span style="padding:8px 12px;color:#888;">待支付</span>
+          <span style="padding:8px 12px;color:#888;">待收貨</span>
+          <span style="padding:8px 12px;color:#888;">待評價</span>
+          <span style="padding:8px 12px;color:#888;">退款</span>
+        </div>
+        <!-- Order card - KEY CHANGE -->
+        <div style="background:white;border-radius:0;padding:12px 14px;border-bottom:6px solid #f5f5f5;position:relative;">
+          <span class="ann" style="top:10px;right:10px;">1</span>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+            <span style="font-weight:600;">🔴 KIKO门店14（快送+自送）›</span>
+            <span style="color:#888;">等待商家接單</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;">
+            <span>焦糖火龍果(L)</span>
+            <!-- CHANGED: was "預計16時40分送達" now time range -->
+            <span style="color:#FF4B5C;font-weight:600;">預計 16:35 – 16:50</span>
+          </div>
+          <!-- Map placeholder -->
+          <div style="background:#f0f0f0;border-radius:8px;height:60px;margin-top:8px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:11px;color:#aaa;padding:4px 10px;background:white;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);">等待商家接單</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:8px;">
+            <span>下單時間：2026-03-24 15:28</span>
+            <span>總價 <strong style="color:#333;">$50</span>
+          </div>
+          <div style="text-align:right;margin-top:8px;">
+            <span style="border:1.5px solid #FF4B5C;color:#FF4B5C;border-radius:14px;padding:4px 14px;font-size:12px;font-weight:600;">再來一單</span>
+          </div>
+        </div>
+        <!-- Another order (completed) -->
+        <div style="background:white;padding:12px 14px;border-bottom:6px solid #f5f5f5;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+            <span style="font-weight:600;">🔴 菜么么测试门店</span>
+            <span style="color:#888;">已送達</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#555;">
+            <span>回头草莓…</span>
+            <span style="color:#888;">已於 14:52 送達</span>
+          </div>
+          <div style="text-align:right;margin-top:8px;">
+            <span style="border:1.5px solid #ddd;color:#888;border-radius:14px;padding:4px 14px;font-size:12px;">再來一單</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="specs-panel">
+    <div class="spec-section spec-ui">
+      <div class="spec-h2">🔴 交互与UI规范</div>
+      <div>
+        <div class="spec-label"><span class="ann-ref">1</span> 订单列表时间展示</div>
+        <div class="spec-val">
+          <span class="tag tag-mod">修改</span> 进行中订单（待支付、待收货等活跃状态）：<br>
+          原：<code>預計16時40分送達</code> → 改：<code>預計 16:35 – 16:50</code>（红色时间段）<br><br>
+          <strong>已送达订单：</strong>保持原样，显示实际送达时间点 <code>已於 14:52 送達</code><br>
+          <strong>已取消订单：</strong>不展示预计时间段（保持现有逻辑）<br><br>
+          <div class="alert-box">⚠️ 仅用户端活跃状态订单改为时间段，历史已完成/已取消订单不变</div>
+        </div>
+      </div>
+    </div>
+    <div class="spec-section spec-data">
+      <div class="spec-h2">🔵 数据逻辑</div>
+      <div class="spec-val">
+        列表接口返回字段新增 <code>display_time_range</code>：<br>
+        <code>{ "start": "16:35", "end": "16:50", "show_range": true }</code><br>
+        客户端判断 <code>show_range == true</code> 时展示时间段，否则展示原時間點
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END TAB 2 -->
+
+<!-- ===== TAB 3: APP气泡及实时活动 ===== -->
+<div class="tab-panel" id="tab-3">
+  <div class="iphone-shell">
+    <div class="iphone-inner">
+      <div class="dynamic-island"></div>
+      <div class="status-bar"><span>16:30</span><span style="font-size:10px;">●●  ▲ 🔋85</span></div>
+      <div class="screen-content" style="background:#f5f5f5;">
+        <!-- iOS real-time activity widget -->
+        <div style="background:white;margin:12px;border-radius:20px;padding:16px;box-shadow:0 4px 20px rgba(0,0,0,.1);position:relative;">
+          <span class="ann" style="top:10px;right:10px;">1</span>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:44px;height:44px;background:#e0f7f4;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🍳</div>
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:700;">商家正在備貨</div>
+              <!-- CHANGED: was "預計 01:20 送達" now time range -->
+              <div style="font-size:13px;color:#555;">預計 <strong style="color:#FF4B5C;">16:55 – 17:10</strong> 送達</div>
+            </div>
+            <div style="width:36px;height:36px;border-radius:10px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;">🐿</div>
+          </div>
+          <!-- Progress bar -->
+          <div style="height:6px;background:#f0f0f0;border-radius:3px;position:relative;margin-bottom:10px;">
+            <div style="width:30%;height:100%;background:linear-gradient(90deg,#FF4B5C,#ff8a65);border-radius:3px;"></div>
+          </div>
+          <!-- Progress steps (simplified) -->
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:#aaa;">
+            <span>下單</span><span>接單</span><span style="color:#FF4B5C;font-weight:600;">備貨</span><span>取餐</span><span>送達</span>
+          </div>
+        </div>
+        <!-- Lock screen widget (below) -->
+        <div style="background:#1c1c1e;margin:8px 12px;border-radius:20px;padding:14px 16px;position:relative;">
+          <span class="ann" style="top:10px;right:10px;">2</span>
+          <div style="color:white;font-size:12px;opacity:.7;margin-bottom:6px;">澳覓APP · 訂單進度</div>
+          <div style="color:white;font-size:14px;font-weight:700;margin-bottom:4px;">商家正在備貨</div>
+          <div style="color:#FF4B5C;font-size:13px;font-weight:600;">預計 16:55 – 17:10 送達</div>
+          <div style="margin-top:10px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;">
+            <div style="width:30%;height:100%;background:#FF4B5C;border-radius:2px;"></div>
+          </div>
+        </div>
+        <!-- Dynamic Island expanded view hint -->
+        <div style="background:#222;margin:8px 12px;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;position:relative;">
+          <span class="ann" style="top:6px;right:8px;">3</span>
+          <div style="width:32px;height:32px;background:#333;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">🍳</div>
+          <div>
+            <div style="color:white;font-size:11px;font-weight:600;">備貨中</div>
+            <div style="color:#FF4B5C;font-size:11px;">16:55 – 17:10</div>
+          </div>
+          <div style="margin-left:auto;">
+            <div style="width:32px;height:32px;border-radius:8px;background:#333;display:flex;align-items:center;justify-content:center;font-size:12px;">🐿</div>
+          </div>
+        </div>
+        
+        <!-- Global Float Bubble -->
+        <div style="position:absolute;bottom:20px;right:12px;left:12px;">
+          <span class="ann" style="top:-8px;right:-8px;z-index:2;">4</span>
+          <div style="background:linear-gradient(90deg, #fdba74, #FF4B5C);border-radius:24px;padding:12px 16px;display:flex;align-items:center;color:white;box-shadow:0 4px 12px rgba(255,75,92,.3);">
+            <div style="width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:12px;">
+              <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#10b981;"></span>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:700;margin-bottom:2px;">商家正在備貨</div>
+              <div style="font-size:12px;opacity:0.9;">預計送達: 16:55 - 17:10</div>
+            </div>
+            <div style="margin-left:auto;font-size:16px;">›</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="specs-panel">
+    <div class="spec-section spec-ui">
+      <div class="spec-h2">🔴 交互与UI规范（iOS实时活动）</div>
+      <div style="margin-bottom:12px;">
+        <div class="spec-label"><span class="ann-ref">1</span> 实时活动卡片（灵动岛展开/锁屏）</div>
+        <div class="spec-val">
+          <span class="tag tag-mod">修改</span> 时间展示区域：<br>
+          原：<code>預計 01:20 送達</code>（精确时间点）<br>
+          改：<code>預計 16:55 – 17:10 送達</code>（时间段，红色加粗）<br><br>
+          <strong>布局：</strong>时间段文字比原时间点略长（最长约16字符），需确认字型适配不截断（不改变原有字号与字重）<br>
+          <strong>样式要求：</strong>保持原实时活动卡片的字号、颜色不变，仅将时间点内容替换为时间段（如字符串过长导致截断，由iOS开发确认适配方案）
+        </div>
+      </div>
+      <hr class="s">
+      <div style="margin-bottom:12px;">
+        <div class="spec-label"><span class="ann-ref">2</span> 锁屏/通知中心 Widget</div>
+        <div class="spec-val">
+          同步展示时间段，文案：<code>預計 HH:mm – HH:mm 送達</code><br>
+          深色背景下时间段使用 <code>#FF4B5C</code> 红色展示，确保可见性
+        </div>
+      </div>
+      <hr class="s">
+      <div>
+        <div class="spec-label"><span class="ann-ref">3</span> 灵动岛收起态（精简展示）</div>
+        <div class="spec-val">
+          收起态空间有限，仅展示时间段数字：<code>HH:mm – HH:mm</code>（不含"預計"前缀）<br>
+          若空间不足，优先展示结束时间：<code>前 HH:mm</code><br><br>
+          <div class="info-box">ℹ️ iOS实时活动相关实现由iOS开发同学确认ActivityKit中 ContentState 结构，需新增 timeRangeStart / timeRangeEnd 字段，替换原 estimatedDeliveryTime 字段用于展示</div>
+        </div>
+      </div>
+      <hr class="s">
+      <div>
+        <div class="spec-label"><span class="ann-ref">4</span> APP全局悬浮气泡（右下角）</div>
+        <div class="spec-val">
+          <span class="tag tag-mod">修改</span> 订单进行中时，用户浏览APP其他页面在右下角出现的全局悬浮气泡：<br>
+          原：<code>預計送達: 17:39</code>（精确点）<br>
+          改：<code>預計送達: 16:55 - 17:10</code>（时间段）<br><br>
+          <strong>样式要求：</strong>保持字号和颜色不变，当展示逻辑为时间段时作横向自然撑开延伸。若不在生效时间段内（降级），则依然像原来一样展示精确时间点。
+        </div>
+      </div>
+    </div>
+    <div class="spec-section spec-data">
+      <div class="spec-h2">🔵 数据逻辑</div>
+      <div class="spec-val">
+        服务端通过 Push-to-Start / Push Update 推送实时活动更新时，新增字段：<br>
+        <code>display_time_range_start</code>（HH:mm 字符串）<br>
+        <code>display_time_range_end</code>（HH:mm 字符串）<br>
+        原 <code>estimated_delivery_time</code> 字段保留（供内部计算）
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END TAB 3 -->
+
+<!-- ===== TAB 4: 优享送处理 ===== -->
+<div class="tab-panel" id="tab-4">
+  <div class="specs-panel" style="max-width:100%;">
+    <div style="background:white;border-radius:14px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);">
+      <div style="font-size:15px;font-weight:700;margin-bottom:16px;">✅ 优享送专项逻辑说明（回归全端精确点版）</div>
+      <div style="font-size:13px;color:#333;line-height:1.8;">
+        <strong>优享送不再适用任何动态时间段展示方案。无论是用户界面的预估文案、订单详情文案，还是管理后台与短信分发，均纯粹地显示单独时间点。</strong><br><br>
+        <strong>📌 基准挂靠与系统下发规则（对齐立配单）：</strong><br>
+        1. <strong>时间点偏移公式：</strong> <code>优享送送达时间点 = 立配时间段终点（即原始T + after_minutes） - 优享送配置的提前分钟数</code><br>
+        2. <strong>实例说明：</strong> 例如立配时间段预计为 16:55 – 17:10 生效期，优享送业务设为提前 5 分钟送达。<br>则下发给优享送订单各个模块的精准送达时间值就是 <code>17:10 往前推 5 分钟 = 17:05</code>。<br>
+        3. <strong>唯一基准：</strong> 订单中心由此公式算出一个确切的时间戳（即 17:05）后，将该时间单点统一下发。后续的超时判定、退款拦截以及所有的前端/骑手/后台展示都<strong>以此单一时间点为准</strong>。<br><br>
+        <span style="color:#b91c1c;font-size:11.5px;">* 备注：此前涉及的优享送时间段UI替换改造已舍弃。但因基准点顺延，仍存在多端联动的测试改动，请依下列细则验证。</span>
+      </div>
+    </div>
+
+    <!-- ===== 优享送规则2：多端UI规格补充 (测试验证依据) ===== -->
+    <div style="margin-top:20px;border-top:2px solid #e0e0e0;padding-top:20px;margin-bottom:20px;">
+      <div style="font-size:15px;font-weight:800;color:#1a1a2e;margin-bottom:4px;">📋 测试验证依据：多端联动影响范围</div>
+      <div style="font-size:12px;color:#888;margin-bottom:18px;">说明：展示形态虽回滚至单点，但基准变动仍涉及触发条件及关联页面测试，测试需覆盖以下场景。</div>
+
+      <!-- 1. 订单详情页 通知条 -->
+      <div style="background:white;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:14px;">
+        <div style="font-size:14px;font-weight:700;color:#c2410c;margin-bottom:14px;">① 订单详情页 · 优享送通知条原则</div>
+        <div style="font-size:12.5px;color:#555;margin-bottom:10px;background:#fff8f0;border-radius:8px;padding:10px 12px;">
+          <strong>一致性说明：</strong><br>
+          保持既有优享送通知条各状态的中英原文案不变（仍体现为固定分钟数的提前量）。本次无需将通知条改为时间段，<strong>继续按照新下发的精准时间点</strong>触发相应文案。
+        </div>
+        <table style="font-size:12px;">
+          <tr>
+            <th style="width:15%;">订单状态</th>
+            <th style="width:42%;">中文文案 (按原UI画板对照)</th>
+            <th style="width:43%;">英文文案</th>
+          </tr>
+          <tr>
+            <td><strong>待支付</strong></td>
+            <td>提前{提前送達分鐘數}分鐘送達，超時退費</td>
+            <td>Expected {} min early, with refunds if delayed</td>
+          </tr>
+          <tr style="background:#f9fafb;">
+            <td><strong>待接单<br>（已支付）</strong></td>
+            <td colspan="2"><span style="color:#888;">(待支付状态下取消订单，无需体现优享送文案)</span></td>
+          </tr>
+          <tr>
+            <td><strong>配送中</strong><br><span style="font-size:10px;color:#888;">未跨越基准点</span></td>
+            <td>提前{提前送達分鐘數}分鐘送達，超時退費</td>
+            <td>Expected {} min early, with refunds if delayed</td>
+          </tr>
+          <tr style="background:#fff0f0;">
+            <td><strong>配送中</strong><br><span style="font-size:10px;color:#dc2626;">服务关闭</span></td>
+            <td>抱歉，因优享送服务已关闭，${优享送费用}服务费已为您退回</td>
+            <td>Sorry, Prior Delivery closed; $2 refunded</td>
+          </tr>
+          <tr style="background:#fff0f0;">
+            <td><strong>配送中</strong><br><span style="font-size:10px;color:#dc2626;">跨越基准点(超时)</span></td>
+            <td>抱歉，未能按预期时间提前送达优享送服务费将在订单完成后原路退回</td>
+            <td>Apologies for the delay. Prior Delivery fee will be refunded after the order is completed</td>
+          </tr>
+          <tr style="background:#f9fafb;">
+            <td><strong>已完成</strong><br><span style="font-size:10px;color:#15803d;">准时送达</span></td>
+            <td>已成功为您提前{实际提前送达分钟数}分钟送达</td>
+            <td>Successfully delivered to you {} min in advance</td>
+          </tr>
+          <tr style="background:#fff0f0;">
+            <td><strong>已完成</strong><br><span style="font-size:10px;color:#dc2626;">延误超时</span></td>
+            <td>未能按照预计时间提前送达，${优享送费用}服务费已为您退回</td>
+            <td>Failed to deliver early as scheduled, $2 Prior Delivery fee refunded to you</td>
+          </tr>
+          <tr>
+            <td><strong>已退款/取消</strong></td>
+            <td>${优享送费用}服务费已为您退回</td>
+            <td>$2 Prior Delivery fee has been refunded for you</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 2. 短信通知 -->
+      <div style="background:white;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:14px;">
+        <div style="font-size:14px;font-weight:700;color:#0891b2;margin-bottom:14px;">② 短信通知触发条件同步</div>
+        <div style="font-size:12.5px;color:#333;margin-bottom:10px;">
+          短信文案字面保持不变，但<strong>短信触发的内部逻辑判断基准必须更新为新的优享送计算点：<br><code style="color:#dc2626;">退款判定戳 = 立配单终点(T + after_minutes) - 优享送提前量</code> </strong>。
+        </div>
+        <table style="font-size:12px;">
+          <tr>
+            <th style="width:20%;">触发场景</th>
+            <th style="width:80%;">原短信文案回溯测试</th>
+          </tr>
+          <tr>
+            <td><strong>优享送超时退款</strong><br><span style="font-size:10px;color:#888;">(订单完成后自动退)</span></td>
+            <td>【澳覓】您的{優享送訂單號}訂單超過時效，${優享送費用}服務費將退款至您的支付帳戶，請注意查收</td>
+          </tr>
+          <tr style="background:#f9fafb;">
+            <td><strong>优享送退款受理</strong><br><span style="font-size:10px;color:#888;">(后台受理操作)</span></td>
+            <td>【澳覓】您的{優享送訂單號}訂單優享送退款已成功受理，${優享送費用}服務費將退款至您的支付帳戶，請注意查收</td>
+          </tr>
+          <tr>
+            <td><strong>优享送准时完成</strong><br><span style="font-size:10px;color:#888;">(优享判定戳前送达)</span></td>
+            <td>【澳覓】您的訂單已提前{實際提前送達分鐘}送達，感謝您使用優享送服務</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 3. 管理后台 -->
+      <div style="background:white;border-radius:14px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:14px;">
+        <div style="font-size:14px;font-weight:700;color:#166534;margin-bottom:14px;">③ 管理后台 · 退款列表与订单详情展现规则</div>
+
+        <div style="font-size:12.5px;color:#555;margin-bottom:12px;">
+          此前曾在方案中计划将后台的优享送“预计送达”字段改为长段落展示，现根据业务方最新确认要求：<br>
+          <strong>管理系统内针对优享送退款申请、订单详情的预估时间展示，统一按照新计算出的【单点时间】执行！不再显示时间段。</strong>
+        </div>
+
+        <div style="display:flex;gap:16px;">
+          <!-- 图表说明：原为截图，现恢复为文字说明 -->
+          <div style="flex:1;background:#f8f9fa;border-radius:10px;padding:12px;border:1px solid #e5e7eb;">
+            <div style="font-size:13px;font-weight:700;margin-bottom:8px;">测试验证：预估时间戳更新</div>
+            <div style="font-size:12px;line-height:1.6;">
+              <span style="color:#dc2626;font-weight:700;">错误实现：</span><br>
+              預計提前送達時間： <span style="text-decoration:line-through;">2024-02-21 14:15–14:35</span> （错误的时间段UI）<br><br>
+              <span style="color:#15803d;font-weight:700;">正确实现要求：</span><br>
+              <div class="alert-box" style="margin-top:6px;background:#f0fff4;border-color:#bbf7d0;">
+                 預計提前送達時間： <strong>14:25</strong> （提前5分鐘）<br>
+                 <span style="font-size:11px;color:#666;">备注：测试需验证，当立配单本身展现段落时，优享送后台列表不应受连带影响而被渲染成时间段。它们只接收上面计算得出的唯一时间点。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END TAB 4 -->
+
+
+<!-- ===== TAB 5: 管理后台 ===== -->
+<div class="tab-panel" id="tab-5">
+  <div class="specs-panel" style="max-width:100%;">
+    <div style="background:white;border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);">
+      <h3 style="font-size:16px;font-weight:700;margin:0 0 16px;color:#1a1a2e;">管理后台 · 订单详情页改造</h3>
+
+      <!-- Mockup of admin order detail -->
+      <div style="background:#f8f9fa;border-radius:12px;padding:16px;border:1px solid #e9ecef;margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:700;color:#333;border-bottom:1px solid #e9ecef;padding-bottom:10px;margin-bottom:12px;">订单信息 · #12345</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <div style="font-size:11px;color:#888;margin-bottom:2px;">门店</div>
+            <div style="font-size:13px;font-weight:600;">菜么么-UAT测试门店</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#888;margin-bottom:2px;">订单状态</div>
+            <div style="font-size:13px;font-weight:600;">已接单</div>
+          </div>
+          <div style="position:relative;">
+            <div style="font-size:11px;color:#888;margin-bottom:2px;">配送时间</div>
+            <div style="font-size:13px;font-weight:600;">
+              立即配送 预计送达时间 2026-03-24 17:01
+              <!-- NEW FIELD -->
+              <span style="color:#FF4B5C;font-weight:700;margin-left:6px;">（约 16:55 – 17:10）</span>
+            </div>
+            <div style="position:absolute;top:-8px;right:-8px;background:#FF4B5C;color:white;font-size:9px;padding:2px 6px;border-radius:8px;">新增字段</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#888;margin-bottom:2px;">备餐时长</div>
+            <div style="font-size:13px;">00:02:36</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="spec-section spec-ui" style="margin:0;">
+          <div class="spec-h2" style="font-size:13px;">🔴 UI规范</div>
+          <div class="spec-val">
+            <strong>展示规则：</strong><br>
+            • 若用户下单时展示的是时间段模式（<code>show_range=true</code>），则在原送达时间点后方追加括号字段：<code>（約 HH:mm – HH:mm）</code><br>
+            • 颜色：<code>#FF4B5C</code>（红色），字重600，便于后台人员快速识别<br>
+            • 若用户下单时展示的是时间点模式（排除门店/开关关闭），则不展示该括号字段<br><br>
+            <div class="info-box">ℹ️ 该字段为只读展示，仅反映用户下单时看到的时间范围，不影响任何业务逻辑</div>
+          </div>
+        </div>
+        <div class="spec-section spec-data" style="margin:0;">
+          <div class="spec-h2" style="font-size:13px;">🔵 数据逻辑</div>
+          <div class="spec-val">
+            管理后台订单详情接口新增字段：<br>
+            <code>user_display_time_range</code>（对象）：<br>
+            &nbsp;&nbsp;<code>show_range</code>: bool<br>
+            &nbsp;&nbsp;<code>start_time</code>: "HH:mm"<br>
+            &nbsp;&nbsp;<code>end_time</code>: "HH:mm"<br><br>
+            此字段存储用户<strong>下单时</strong>看到的时间段快照，不随后续时间变化而更新
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END TAB 5 -->
+
+<!-- ===== TAB 6: 通用配置后台 ===== -->
+<div class="tab-panel" id="tab-6">
+  <div class="specs-panel" style="max-width:100%;">
+    <div style="background:white;border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);">
+      <h3 style="font-size:16px;font-weight:700;margin:0 0 4px;color:#1a1a2e;">管理后台 · 通用配置新增项</h3>
+      <div style="font-size:12px;color:#888;margin-bottom:16px;">路径：通用配置 › 外卖配置 › 立配单时间段设置</div>
+
+      <!-- Config mockup -->
+      <div style="background:#f8f9fa;border-radius:12px;padding:16px;border:1px solid #e9ecef;margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e9ecef;">立配单时间段显示配置 <span style="background:#dcfce7;color:#15803d;font-size:10px;padding:2px 8px;border-radius:8px;margin-left:8px;">NEW</span></div>
+        
+        <div style="display:grid;gap:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:white;border-radius:8px;border:1px solid #e9ecef;">
+            <div>
+              <div style="font-size:13px;font-weight:600;">总开关</div>
+              <div style="font-size:11px;color:#888;">开启后，符合条件的立配单将对用户展示时间段</div>
+            </div>
+            <div style="width:44px;height:24px;background:#FF4B5C;border-radius:12px;position:relative;">
+              <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 1px 4px rgba(0,0,0,.2);"></div>
+            </div>
+          </div>
+          
+          <div style="padding:10px 12px;background:white;border-radius:8px;border:1px solid #e9ecef;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px;">生效时段</div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:12px;margin-bottom:8px;">
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="time_period" checked style="accent-color:#FF4B5C;"> 全时段</label>
+              <label style="display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="time_period" style="accent-color:#FF4B5C;"> 指定时段</label>
+            </div>
+            <div style="background:#f9f9f9;border:1px dashed #ccc;border-radius:6px;padding:8px;font-size:11px;color:#666;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <input type="time" value="11:00" style="border:1px solid #ddd;border-radius:4px;padding:2px 4px;"> - 
+                <input type="time" value="14:00" style="border:1px solid #ddd;border-radius:4px;padding:2px 4px;">
+                <span style="color:#FF4B5C;cursor:pointer;">✕</span>
+              </div>
+              <div style="color:#0ea5e9;cursor:pointer;font-weight:600;">+ 添加时段</div>
+            </div>
+          </div>
+          
+          <div style="padding:10px 12px;background:white;border-radius:8px;border:1px solid #e9ecef;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px;">适用业务线</div>
+            <div style="display:flex;gap:8px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" checked style="accent-color:#FF4B5C;"> 餐饮
+              </label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" checked style="accent-color:#FF4B5C;"> 非餐
+              </label>
+            </div>
+          </div>
+          
+          <div style="padding:10px 12px;background:white;border-radius:8px;border:1px solid #e9ecef;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px;">前偏移分钟数（before_minutes）</div>
+            <input type="number" value="10" style="width:80px;border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:13px;"> 分钟
+            <div style="font-size:11px;color:#888;margin-top:4px;">用户看到的时间段开始 = 预计送达时间 - 此值</div>
+          </div>
+          
+          <div style="padding:10px 12px;background:white;border-radius:8px;border:1px solid #e9ecef;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px;">后偏移分钟数（after_minutes）</div>
+            <input type="number" value="5" style="width:80px;border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:13px;"> 分钟
+            <div style="font-size:11px;color:#888;margin-top:4px;">用户看到的时间段结束 = 预计送达时间 + 此值</div>
+            <div style="font-size:11px;color:#b45309;margin-top:3px;">注：同时作为优享送超时退款 deadline = T + after_minutes</div>
+          </div>
+ 
+          
+          <div style="padding:10px 12px;background:white;border-radius:8px;border:1px solid #e9ecef;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:8px;">排除门店名单（立配单专用）</div>
+            <div style="font-size:11px;color:#888;margin-bottom:6px;">名单内门店保持展示精确时间点。注意：此为立配单的独立排除名单配置，与预约单名单分开管理</div>
+            <div style="background:#fff3f3;border-radius:6px;padding:8px;font-size:12px;color:#555;">
+              已配置 <strong>3</strong> 个门店（示例：麦当劳门店组 #1024, #1025...）
+              <span style="color:#FF4B5C;cursor:pointer;margin-left:8px;">编辑名单 ›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="spec-section spec-ui" style="margin:0;">
+          <div class="spec-h2" style="font-size:13px;">🔴 配置规范</div>
+          <div class="spec-val">
+            <strong>配置项与预约单的关系：</strong><br>
+            • 立配单和预约单使用各自独立的配置节点，互不影响<br>
+            • 前后偏移量可各自独立配置，建议初始值：前10后5<br>
+            • 排除门店名单也各自独立，立配单新增一条独立名单配置项<br><br>
+            <div class="alert-box">⚠️ 注意：参考预约单经验——配置中"前0后0"时，依然会显示时间段格式（段落样式），请运营在配置时确认前后偏移值不得同时为0</div>
+          </div>
+        </div>
+        <div class="spec-section spec-data" style="margin:0;">
+          <div class="spec-h2" style="font-size:13px;">🔵 接口设计</div>
+          <div class="spec-val">
+            通用配置接口 <code>GET /api/common-config</code> 返回新增节点：<br>
+            <code>instant_delivery_time_range</code>: {<br>
+            &nbsp;&nbsp;<code>enabled</code>: true,<br>
+            &nbsp;&nbsp;<code>business_types</code>: ["restaurant","non_restaurant"],<br>
+            &nbsp;&nbsp;<code>active_time_periods</code>: [{ "start": "11:00", "end": "14:00" }], <span style="color:#888;">// 若为空数组或null表示全时段开启</span><br>
+            &nbsp;&nbsp;<code>before_minutes</code>: 10,<br>
+            &nbsp;&nbsp;<code>after_minutes</code>: 5,<br>
+            &nbsp;&nbsp;<code>exclude_shop_ids</code>: [1024, 1025, ...]<br>
+            }<br><br>
+            客户端每次进入下单流程时请求一次，结果可缓存至订单提交完成。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END TAB 6 -->
+
+</div><!-- end main container -->
+
+<script>
+function switchTab(index) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i === index));
+  document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i === index));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+// Auto-init: show first tab
+document.addEventListener('DOMContentLoaded', () => switchTab(0));
+</script>
+</body>
+</html>
