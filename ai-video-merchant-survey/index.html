@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>AI 视频平台 · 商家调研概要</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --ink: #17202a;
+      --muted: #667483;
+      --line: #dce3ea;
+      --surface: #fff;
+      --blue: #246bfe;
+      --amber: #b66a00;
+      --shadow: 0 12px 32px rgba(30, 42, 58, .07);
+    }
+    * { box-sizing: border-box; }
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+      padding-left: max(16px, env(safe-area-inset-left));
+      padding-right: max(16px, env(safe-area-inset-right));
+      padding-bottom: max(40px, env(safe-area-inset-bottom));
+    }
+    .hero {
+      background: linear-gradient(135deg, #101827, #1f4b67);
+      color: #fff;
+      border-radius: 10px;
+      padding: 28px 30px;
+      box-shadow: var(--shadow);
+    }
+    .eyebrow {
+      margin: 0 0 6px;
+      color: #a9d6ff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 5.5vw, 30px);
+      line-height: 1.25;
+      word-break: break-word;
+    }
+    .hero-sub {
+      margin: 10px 0 0;
+      color: #d9e7f5;
+      font-size: clamp(14px, 3.6vw, 15px);
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .meta span {
+      font-size: 12px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.15);
+    }
+    .section {
+      margin-top: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+    h2 {
+      margin: 0 0 14px;
+      font-size: clamp(18px, 4.5vw, 20px);
+    }
+    .summary-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .summary-list li {
+      position: relative;
+      padding: 12px 0 12px 18px;
+      border-bottom: 1px solid #eef2f6;
+      font-size: clamp(14px, 3.8vw, 15px);
+      word-break: break-word;
+    }
+    .summary-list li:last-child { border-bottom: none; }
+    .summary-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+    .profiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .profile {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px;
+      background: #fbfcfd;
+    }
+    .profile.a { border-top: 4px solid var(--blue); }
+    .profile.b { border-top: 4px solid var(--amber); }
+    .profile-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .profile.a .profile-tag { background: #e8f1ff; color: #164da8; }
+    .profile.b .profile-tag { background: #fff4e5; color: var(--amber); }
+    .profile h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+    .profile .role {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .block { margin-bottom: 12px; }
+    .block-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: none;
+    }
+    .block p, .block ul {
+      margin: 0;
+      font-size: clamp(14px, 3.6vw, 15px);
+      word-break: break-word;
+    }
+    .block ul { padding-left: 18px; }
+    .block li { margin: 4px 0; }
+    .takeaway {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #f7faff;
+      border-left: 3px solid var(--blue);
+      font-size: clamp(14px, 3.6vw, 15px);
+      word-break: break-word;
+    }
+    .compare-wrap {
+      margin: 0 -4px;
+    }
+    .compare {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .compare th, .compare td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      word-break: break-word;
+    }
+    .compare th {
+      background: #f0f4f8;
+      width: 22%;
+      font-weight: 700;
+    }
+    .compare-cards {
+      display: none;
+    }
+    .compare-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fbfcfd;
+    }
+    .compare-card:last-child { margin-bottom: 0; }
+    .compare-card h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: #164da8;
+    }
+    .compare-row {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eef2f6;
+      font-size: 14px;
+    }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-label {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .compare-value {
+      margin: 0;
+      word-break: break-word;
+    }
+    .footer {
+      margin-top: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    @media (max-width: 760px) {
+      main {
+        padding-top: 16px;
+      }
+      .hero {
+        padding: 22px 18px;
+        border-radius: 12px;
+      }
+      .section {
+        padding: 18px 16px;
+        border-radius: 12px;
+        margin-top: 14px;
+      }
+      .profiles {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .profile {
+        padding: 16px;
+      }
+      .meta span {
+        font-size: 11px;
+        padding: 6px 10px;
+        line-height: 1.4;
+      }
+      .compare-wrap .compare {
+        display: none;
+      }
+      .compare-cards {
+        display: block;
+      }
+    }
+    @media (min-width: 761px) {
+      .compare-cards {
+        display: none !important;
+      }
+    }
+    @media (max-width: 380px) {
+      .compare-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <p class="eyebrow">PRD 立项前 · 商家深度访谈</p>
+      <h1>AI 视频平台 · 调研概要</h1>
+      <p class="hero-sub">2026-07-01 线下面对面访谈 · 餐饮 2 家 · 聚焦真实诉求、付费边界与产品形态</p>
+      <div class="meta">
+        <span>澳门仔茶餐厅 · 老板（即梦基础版）</span>
+        <span>喜庆堂 · 店长</span>
+        <span>B 类锚点 1.8 元/秒</span>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>概要</h2>
+      <ul class="summary-list">
+        <li><strong>两类诉求不同：</strong>A 已是即梦深度用户、能稳定出片，切换动力在「粤语发音」；B 依赖外包，核心在降本与创意自动化。</li>
+        <li><strong>A 类价格锚定即梦：</strong>基础版会员已满足日常生成，对价格敏感——<strong>若显著高于即梦，大概率不会迁移</strong>；1.8 元/秒口径主要适用于 B 类。</li>
+        <li><strong>A 类核心痛点：</strong>粤语发音不准，成片常不尽人意、需反复重生成；提示词环节已自建（大模型写词 → 即梦出片）。</li>
+        <li><strong>B 类付费空间更大：</strong>认可 1.8 元/秒，相对外包 600 元/条降本明显；转化前提是案例 + 内测。</li>
+        <li><strong>产品需双路径：</strong>A 以「粤语/本地化 + 不输即梦的价格」切入口；B 以模板化低门槛 + 一体化平台切入口。</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>两类商家原声（润色）</h2>
+      <div class="profiles">
+        <article class="profile a">
+          <span class="profile-tag">画像 A · 即梦深度用户</span>
+          <h3>澳门仔茶餐厅 · 老板</h3>
+          <p class="role">店主兼创作者，已能自主产出并发布视频</p>
+
+          <div class="block">
+            <div class="block-title">现状</div>
+            <p>深度使用<strong>即梦</strong>，已开通<strong>基础版会员</strong>，日常生成需求基本可满足，已有稳定视频产出。工作流为：自行用大模型撰写提示词 → 提交即梦生成；必要时配合剪映微调。亦了解小云雀等平台。</p>
+          </div>
+          <div class="block">
+            <div class="block-title">痛点</div>
+            <ul>
+              <li><strong>粤语发音</strong>是最大瓶颈：口型/读音经常不准，成片效果不尽人意</li>
+              <li>为修粤语问题需<strong>反复重生成</strong>，浪费时间与额度</li>
+              <li>提示词环节已自行解决，迁移动力不在「会不会写词」</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title">价格与切换意愿</div>
+            <p><strong>对价格敏感，锚定即梦。</strong>基础版已够用，若新平台单价明显高于即梦，大概率不会考虑切换。潜在接受前提：粤语效果显著优于即梦，且<strong>综合成本（含重试）不高于现有方案</strong>。</p>
+          </div>
+          <div class="takeaway">竞争对象主要是<strong>即梦</strong>而非空白市场 → 突破口在<strong>粤语/方言质量 + 重试成本控制</strong>，定价需对齐或仅小幅溢价，不能以 B 类 1.8 元/秒口径直接套用。</div>
+        </article>
+
+        <article class="profile b">
+          <span class="profile-tag">画像 B · 外包依赖型</span>
+          <h3>喜庆堂 · 店长</h3>
+          <p class="role">负责运营营销，不亲自做内容</p>
+
+          <div class="block">
+            <div class="block-title">现状</div>
+            <p>周期性外包短视频（约 <strong>6,000 元/10 条</strong>），另需承担拍摄涉及的食材/摆盘成本；偶发自拍，但创意匮乏。</p>
+          </div>
+          <div class="block">
+            <div class="block-title">痛点</div>
+            <ul>
+              <li>外包综合成本高，难以高频更新</li>
+              <li>自主拍摄缺少脚本与创意</li>
+              <li>担心 AI 模特被大量商家复用，缺乏辨识度</li>
+            </ul>
+          </div>
+          <div class="block">
+            <div class="block-title">诉求</div>
+            <p>希望「上传少量素材 + 描述需求」即可生成高质量创意视频；价格需低于人工/KOL 拍摄。认可 <strong>1.8 元/秒</strong>，但希望有<strong>内测期</strong>先验效果。参考标杆：绿叶、map coffee。</p>
+          </div>
+          <div class="takeaway">偏好<strong>一体化自助平台</strong>，需支持模板入口、模特/声音可定制，案例库是付费前置条件。</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>关键差异对照</h2>
+      <div class="compare-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>老板（A）</th>
+              <th>店长（B）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>工具经验</td>
+              <td>即梦基础版（主）+ 自写提示词 + 剪映</td>
+              <td>几乎无，依赖外包</td>
+            </tr>
+            <tr>
+              <td>单条成本</td>
+              <td>即梦会员内（低），对标即梦定价</td>
+              <td>600 元+（外包均摊）</td>
+            </tr>
+            <tr>
+              <td>核心诉求</td>
+              <td>粤语发音准确、减少重生成</td>
+              <td>降本、创意自动化、案例验证</td>
+            </tr>
+            <tr>
+              <td>付费前提</td>
+              <td>粤语效果优于即梦，总价不高于现方案</td>
+              <td>先看案例 + 内测通过</td>
+            </tr>
+            <tr>
+              <td>切换门槛</td>
+              <td>价格高即梦则不考虑</td>
+              <td>1.8 元/秒可接受</td>
+            </tr>
+            <tr>
+              <td>产品入口</td>
+              <td>兼容现有提示词流程 / 方言增强</td>
+              <td>简易模式 / 模板生成</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="compare-cards" aria-label="关键差异对照（移动端）">
+          <article class="compare-card">
+            <h3>老板（A）· 即梦深度用户</h3>
+            <div class="compare-row"><span class="compare-label">工具经验</span><span class="compare-value">即梦基础版（主）+ 自写提示词 + 剪映</span></div>
+            <div class="compare-row"><span class="compare-label">单条成本</span><span class="compare-value">即梦会员内（低），对标即梦定价</span></div>
+            <div class="compare-row"><span class="compare-label">核心诉求</span><span class="compare-value">粤语发音准确、减少重生成</span></div>
+            <div class="compare-row"><span class="compare-label">付费前提</span><span class="compare-value">粤语效果优于即梦，总价不高于现方案</span></div>
+            <div class="compare-row"><span class="compare-label">切换门槛</span><span class="compare-value">价格高即梦则不考虑</span></div>
+            <div class="compare-row"><span class="compare-label">产品入口</span><span class="compare-value">兼容现有提示词流程 / 方言增强</span></div>
+          </article>
+          <article class="compare-card">
+            <h3>店长（B）· 外包依赖型</h3>
+            <div class="compare-row"><span class="compare-label">工具经验</span><span class="compare-value">几乎无，依赖外包</span></div>
+            <div class="compare-row"><span class="compare-label">单条成本</span><span class="compare-value">600 元+（外包均摊）</span></div>
+            <div class="compare-row"><span class="compare-label">核心诉求</span><span class="compare-value">降本、创意自动化、案例验证</span></div>
+            <div class="compare-row"><span class="compare-label">付费前提</span><span class="compare-value">先看案例 + 内测通过</span></div>
+            <div class="compare-row"><span class="compare-label">切换门槛</span><span class="compare-value">1.8 元/秒可接受</span></div>
+            <div class="compare-row"><span class="compare-label">产品入口</span><span class="compare-value">简易模式 / 模板生成</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>产品启示（精简）</h2>
+      <ul class="summary-list">
+        <li><strong>A 类策略：</strong>不做「教写提示词」，主打<strong>粤语/方言生成质量</strong>；定价锚定即梦基础版，强调「少重试 = 更低综合成本」。</li>
+        <li><strong>B 类策略：</strong>模板化入口 + 案例/内测；可按 1.8 元/秒、首条 19 元体验推进转化。</li>
+        <li><strong>双模式入口：</strong>A 兼容「自带提示词 → 平台增强方言出片」；B 走「上传素材 + 描述需求 → 一键出片」。</li>
+        <li><strong>避免定价误区：</strong>A/B 价格敏感度不同，不可用同一报价逻辑覆盖两类用户。</li>
+      </ul>
+    </section>
+
+    <p class="footer">AI 视频生成平台 · 商家调研概要 · N=2 · 2026-07-01</p>
+  </main>
+</body>
+</html>
